@@ -1,0 +1,7 @@
+numpy
+rasterio
+scikit-learn
+skopt
+scikit-optimize
+pathos
+pickle
