@@ -16,7 +16,7 @@ class PixelAccuracy(object):
         self.map = None
         self.njobs=njobs
 
-    def fit(self, X, labels, preds, niter=15):
+    def fit(self, X, labels, preds, niter=15, n_points=3):
         if self.classifier == 'RandomForestClassifier':
             print(f'=================================')
             print(f'= Pixel Accuracy: model fitting =')
@@ -40,8 +40,8 @@ class PixelAccuracy(object):
                         'min_samples_split': (2, 10),
                         'min_samples_leaf': (2, 10)
                     },
-                    n_iter= niter,
-                    n_jobs = self.njobs
+                    n_iter=niter,
+                    n_jobs=self.njobs
                 )
                 opt.fit(_X, _y)
                 print("val. score: %s" % opt.best_score_)
@@ -62,12 +62,11 @@ class PixelAccuracy(object):
             classes_in_map = list(np.unique(_map))
             lintersect = list(set(classes_in_map) & set(self.model_dic.keys()))
             models2apply = {key: self.model_dic[key] for key in lintersect}
-
         else:
-            models2apply = list(self.model_dic.values())
+            models2apply = self.model_dic
 
         pool = pp(nodes=ncpus)
-        _pamaps = pool.map(pixel_based_accuracy_class_i, models2apply)
+        _pamaps = pool.map(pixel_based_accuracy_class_i, list(models2apply.values()))
 
         self.pamaps = np.array([x[0,:,:, 1] for x in _pamaps])
         _pamaps = None  # release memory

@@ -7,9 +7,20 @@ import matplotlib.pyplot as plt
 
 from pixac.pixelaccuracy import *
 
+def save_model_as_pickle(filename, mdl):
+    with open(filename, 'wb') as handle:
+        pickle.dump(mdl, handle, protocol=4)
+    return
+
+def load_model_from_pickle(filename):
+    with open(filename, 'rb') as f:
+        mdl = pickle.load(f)
+    return mdl
+
 # Read the training data
 root_dir = r'/eos/jeodpp/home/users/waldnfr/pixac'
 rdata_fn = os.path.join(root_dir, r'LUCAS_validation_map_ref_S1_1x1.csv')
+mdl_fn = os.path.join(root_dir, r'pa_models.pickle')
 mp_fns   = glob.glob(os.path.join(root_dir, 's1_stack_EU*level2.tif'))
 im_fns   = [x for x in glob.glob(os.path.join(root_dir, 's1_stack_EU*.tif')) if 'level2' not in x]
 my_nan = -10000
@@ -25,9 +36,13 @@ lbls = df['level_2'].values
 prds = df['prediction_v5'].values
 my_X = df[[x for x in list(df.columns) if x.startswith('V')]].values
 
-# Build prediction models
-pixel_accuracy = PixelAccuracy(njobs=2)
-pixel_accuracy.fit(my_X, lbls, prds)
+# Building the rf forest models
+if not os.path.exists(mdl_fn):
+    pixel_accuracy = PixelAccuracy()
+    pixel_accuracy.fit(my_X, lbls, prds)
+    save_model_as_pickle(mdl_fn, pixel_accuracy)
+else:
+    pixel_accuracy = load_model_from_pickle(mdl_fn)
 
 # Model inference on Sentinel-2 tiles
 for mp_fn, im_fn in zip(mp_fns, im_fns):
