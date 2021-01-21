@@ -3,6 +3,8 @@ import numpy as np
 """
 Module implementing pixel-based classifier
 """
+
+
 class PixelClassifier(object):
     """
     Pixel classifier extends a receptive field of a classifier over an entire image.
@@ -95,7 +97,7 @@ class PixelClassifier(object):
         probabilities = probabilities.reshape(X.shape[0], X.shape[1], X.shape[2], probabilities.shape[1])
 
         if idx is not None:
-            probabilities = probabilities[:,:,:, idx]
+            probabilities = probabilities[:, :, :, idx]
         return probabilities
 
-#EOF
+# EOF
