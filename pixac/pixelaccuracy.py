@@ -16,7 +16,7 @@ class PixelAccuracy(object):
         self.map = None
         self.njobs=njobs
 
-    def fit(self, X, labels, preds):
+    def fit(self, X, labels, preds, niter=15):
         if self.classifier == 'RandomForestClassifier':
             print(f'=================================')
             print(f'= Pixel Accuracy: model fitting =')
@@ -40,7 +40,7 @@ class PixelAccuracy(object):
                         'min_samples_split': (2, 10),
                         'min_samples_leaf': (2, 10)
                     },
-                    n_iter= ,
+                    n_iter= niter,
                     n_jobs = self.njobs
                 )
                 opt.fit(_X, _y)
