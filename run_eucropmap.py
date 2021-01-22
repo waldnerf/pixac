@@ -4,6 +4,7 @@ import numpy as np
 from rasterio.plot import reshape_as_raster, reshape_as_image
 import pickle
 import matplotlib.pyplot as plt
+import time
 
 from pixac.pixelaccuracy import *
 
@@ -46,6 +47,7 @@ else:
 
 # Model inference on Sentinel-2 tiles
 for mp_fn, im_fn in zip(mp_fns, im_fns):
+    start_time = time.time()
     pa_fn = mp_fn.split('.tif')[0]+'_pa.tif'
 
     # read the image stack to use for inference
@@ -72,5 +74,8 @@ for mp_fn, im_fn in zip(mp_fns, im_fns):
     with rasterio.open(pa_fn, 'w', **profile) as dst:
         my_pamaps[my_pamaps == my_nan] = np.nan
         dst.write(np.expand_dims(my_pamaps, 0))
+
+    end_time = time.time()
+    print(f'Tile processed in {(end_time - start_time)/60} minutes')
 
 # EOF
