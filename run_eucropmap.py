@@ -5,6 +5,7 @@ from rasterio.plot import reshape_as_raster, reshape_as_image
 import pickle
 import matplotlib.pyplot as plt
 import time
+import re
 
 from pixac.pixelaccuracy import *
 
@@ -35,7 +36,9 @@ df = df.dropna()
 # Generate feature set, labels, and predictions
 lbls = df['level_2'].values
 prds = df['prediction_v5'].values
-my_X = df[[x for x in list(df.columns) if x.startswith('V')]].values
+regex='(((?<![\w\d])VH_)|((?<![\w\d])VV_))(20180[1-7])'
+my_X = df[[x for x in list(df.columns) if re.findall(regex,x)]].values
+#my_X = df[[x for x in list(df.columns) if x.startswith('V')]].values
 
 # Building the rf forest models
 if not os.path.exists(mdl_fn):
@@ -52,7 +55,11 @@ for mp_fn, im_fn in zip(mp_fns, im_fns):
 
     # read the image stack to use for inference
     with rasterio.open(im_fn) as src:
-        ras = src.read()
+        #ras = src.read()
+        #select and re-order bands
+        VH=list(range(72,28,-2))
+        VV=list(range(71,27,-2))
+        ras= src.read((*VH,*VV))
         img = reshape_as_image(ras).astype(np.int)
         profile = src.profile
 
