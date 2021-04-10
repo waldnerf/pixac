@@ -20,8 +20,8 @@ def load_model_from_pickle(filename):
     return mdl
 
 # Read the training data
-root_dir = r'/eos/jeodpp/home/users/waldnfr/pixac'
-rdata_fn = os.path.join(root_dir, r'LUCAS_validation_map_ref_S1_1x1.csv')
+root_dir = r'/eos/jeodpp/home/users/verheas/pixac/'
+rdata_fn = os.path.join(root_dir, r'LUCAS_validation_map_v7_ref_S1_1x1.csv')
 mdl_fn = os.path.join(root_dir, r'pa_models.pickle')
 mp_fns   = glob.glob(os.path.join(root_dir, 's1_stack_EU*level2.tif'))
 im_fns   = [x for x in glob.glob(os.path.join(root_dir, 's1_stack_EU*.tif')) if 'level2' not in x]
@@ -35,7 +35,7 @@ df = df.dropna()
 
 # Generate feature set, labels, and predictions
 lbls = df['level_2'].values
-prds = df['prediction_v5'].values
+prds = df['classification'].values
 regex='(((?<![\w\d])VH_)|((?<![\w\d])VV_))(20180[1-7])'
 my_X = df[[x for x in list(df.columns) if re.findall(regex,x)]].values
 #my_X = df[[x for x in list(df.columns) if x.startswith('V')]].values
