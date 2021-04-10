@@ -1,0 +1,33 @@
+Instructions to submit on HTCondor:
+"Pixel Accuracy method on the version 7 of the Eucropmap"
+
+code repository: https://github.com/waldnerf/pixac
+user for HTCondor: refocusproc
+docker_image   = jeoreg.cidsn.jrc.it:5000/jeodpp-htcondor/d5-eucropmap_py3:1.1 
+
+1. Create a folder for classification output
+
+cd /eos/jeodpp/data/projects/REFOCUS/data/S1_GS
+mkdir pixac_v7_stratum_1
+mkdir pixac_v7_stratum_2
+
+2. Modify the bash submission files
+
+cd /eos/jeodpp/home/users/verheas/pixac/htcondor/
+
+** modify the following files with the correct arguments:
+-Input tiles : S1 images - /eos/jeodpp/home/users/verheas/pixac/htcondor/list_rasters_eu_stratum_all1_all.lst $(ClusterID) $(ProcId)
+-Folder with the map classif tiles - 
+-output folder /eos/jeodpp/data/projects/REFOCUS/data/S1_GS/pixac_v7_stratum_1/
+-classif models per class  /eos/jeodpp/home/users/verheas/pixac/pixac/pa_models.pickle
+(csv file with S1 extract and validation - only if we run the RF models on htc)
+-stratum
+
+3. Launch the jobs with htcondor
+
+cd /eos/jeodpp/home/users/verheas/pixac/htcondor/
+
+sudo -u refocusproc condor_submit submit_eucropmap_pixac_job_stratum1.sh
+
+"condor_submit submit_eucropmap_pixac_job_stratum1.sh"
+
