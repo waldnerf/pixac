@@ -18,19 +18,23 @@ def load_model_from_pickle(filename):
     with open(filename, 'rb') as f:
         mdl = pickle.load(f)
     return mdl
+ 
+# choose the stratum
+stratum=1
 
 # Read the training data
 root_dir = r'/eos/jeodpp/home/users/verheas/pixac/'
 rdata_fn = os.path.join(root_dir, r'LUCAS_validation_map_v7_ref_S1_1x1.csv')
-mdl_fn = os.path.join(root_dir, r'pa_models.pickle')
+mdl_fn = os.path.join(root_dir, r'pa_models_str'+str(stratum)+'.pickle')
 mp_fns   = glob.glob(os.path.join(root_dir, 's1_stack_EU*level2.tif'))
 im_fns   = [x for x in glob.glob(os.path.join(root_dir, 's1_stack_EU*.tif')) if 'level2' not in x]
+
 my_nan = -10000
 nnodes = 10
 
-# Read validation data and subset to stratum 1
+# Read validation data and subset to stratum 1 or 2
 df = pd.read_csv(rdata_fn)
-df = df[df['stratum'].isin([1])]
+df = df[df['stratum'].isin([stratum])]
 df = df.dropna()
 
 # Generate feature set, labels, and predictions
