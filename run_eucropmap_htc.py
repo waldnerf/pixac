@@ -33,7 +33,7 @@ def load_model_from_pickle(filename):
 #mdl_fn = os.path.join(root_dir, r'pa_models.pickle')
 #mp_fns   = glob.glob(os.path.join(root_dir, 's1_stack_EU*level2.tif'))
 #im_fns   = [x for x in glob.glob(os.path.join(root_dir, 's1_stack_EU*.tif')) if 'level2' not in x]
-mdl_fn=os.path.join(model_path, r'pa_models.pickle') 
+mdl_fn=os.path.join(model_path, r'pa_models_str'+str(stratum)+'.pickle') 
 im_fns=input_tif
 mp_fns=os.path.join(classif_dir, os.path.basename(input_tif)[:-4] + '_predict_level2.tif')
 
