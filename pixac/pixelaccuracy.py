@@ -7,16 +7,18 @@ from pathos.pools import ThreadPool as pp
 from pixac.pixelclassifier import *
 
 class PixelAccuracy(object):
-    def __init__(self, classifier='RandomForestClassifier', njobs=1):
+    def __init__(self, classifier='RandomForestClassifier', njobs=1, niter=15, npoints=3):
         self.classifier = classifier
         self.model_dic = {}
         self.labels = []
         self.pamaps = []
         self.masked_pamaps = None
         self.map = None
-        self.njobs=njobs
+        self.njobs = njobs
+        self.niter = niter
+        self.npoints = npoints
 
-    def fit(self, X, labels, preds, niter=15, npoints=3):
+    def fit(self, X, labels, preds):
         if self.classifier == 'RandomForestClassifier':
             print(f'=================================')
             print(f'= Pixel Accuracy: model fitting =')
@@ -26,7 +28,7 @@ class PixelAccuracy(object):
             for _label in np.unique(labels):
                 print(f'=================================')
                 print(f'Building model for class: {_label}')
-                ids = labels != _label
+                ids = labels == _label
                 _preds = preds[ids].astype(np.int)
                 _X = X[ids, :]
                 _labels = labels[ids]
@@ -40,9 +42,9 @@ class PixelAccuracy(object):
                         'min_samples_split': (2, 10),
                         'min_samples_leaf': (2, 10)
                     },
-                    n_iter=niter,
+                    n_iter=self.niter,
                     n_jobs=self.njobs,
-                    n_points=npoints
+                    n_points=self.npoints
                 )
                 opt.fit(_X, _y)
                 print("val. score: %s" % opt.best_score_)
