@@ -20,11 +20,11 @@ def load_model_from_pickle(filename):
     return mdl
  
 # choose the stratum
-stratum=2
+stratum=1
 
 # Read the training data
-root_dir = r'/eos/jeodpp/home/users/verheas/pixac/'
-rdata_fn = os.path.join(root_dir, r'LUCAS_validation_map_v7_ref_S1_1x1.csv')
+root_dir = r'/eos/jeodpp/data/projects/REFOCUS/data/S1_GS/v7/pixaccuracy/pixac/'
+rdata_fn = os.path.join(root_dir, r'LUCAS_validation_map_v7_ref_S1_1x1_pixac.csv')
 mdl_fn=os.path.join(root_dir+'model/', r'pa_models_str'+str(stratum)+'.pickle') 
 mp_fns   = glob.glob(os.path.join(root_dir, 's1_stack_EU*level2.tif'))
 im_fns   = [x for x in glob.glob(os.path.join(root_dir, 's1_stack_EU*.tif')) if 'level2' not in x]
@@ -35,6 +35,14 @@ nnodes = 10
 # Read validation data and subset to stratum 1 or 2
 df = pd.read_csv(rdata_fn)
 df = df[df['stratum'].isin([stratum])]
+
+# classes with 0 correct prediction in stratum 1
+df = df[df['level_2']!=217]
+df = df[df['level_2']!=219]
+df = df[df['level_2']!=223]
+df = df[df['level_2']!=600]
+
+
 df = df.dropna()
 
 # Generate feature set, labels, and predictions
