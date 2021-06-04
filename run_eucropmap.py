@@ -20,7 +20,7 @@ def load_model_from_pickle(filename):
     return mdl
  
 # choose the stratum
-stratum=1
+stratum=2
 
 # Read the training data
 root_dir = r'/eos/jeodpp/data/projects/REFOCUS/data/S1_GS/v7/pixaccuracy/pixac/'
@@ -37,11 +37,22 @@ df = pd.read_csv(rdata_fn)
 df = df[df['stratum'].isin([stratum])]
 
 # classes with 0 correct prediction in stratum 1
-df = df[df['level_2']!=217]
-df = df[df['level_2']!=219]
-df = df[df['level_2']!=223]
-df = df[df['level_2']!=600]
-
+if stratum == 1:
+    df = df[df['level_2']!=217]
+    df = df[df['level_2']!=218]
+    df = df[df['level_2']!=219]
+    df = df[df['level_2']!=223]
+    df = df[df['level_2']!=233]
+    df = df[df['level_2']!=600]
+elif stratum == 2 :
+    df = df[df['level_2']!=214]
+    df = df[df['level_2']!=215]
+    df = df[df['level_2']!=217]
+    df = df[df['level_2']!=218]
+    df = df[df['level_2']!=219]
+    df = df[df['level_2']!=221]
+    df = df[df['level_2']!=222]
+    df = df[df['level_2']!=223]
 
 df = df.dropna()
 

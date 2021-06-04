@@ -54,6 +54,24 @@ df = df[df['stratum'].isin([stratum])]
 print(stratum)
 df = df.dropna()
 
+# classes with 0 correct prediction in stratum 1 and 2
+if stratum == 1:
+    df = df[df['level_2']!=217]
+    df = df[df['level_2']!=218]
+    df = df[df['level_2']!=219]
+    df = df[df['level_2']!=223]
+    df = df[df['level_2']!=233]
+    df = df[df['level_2']!=600]
+elif stratum == 2:
+    df = df[df['level_2']!=214]
+    df = df[df['level_2']!=215]
+    df = df[df['level_2']!=217]
+    df = df[df['level_2']!=218]
+    df = df[df['level_2']!=219]
+    df = df[df['level_2']!=221]
+    df = df[df['level_2']!=222]
+    df = df[df['level_2']!=223]
+
 # Generate feature set, labels, and predictions
 lbls = df['level_2'].values
 prds = df['classification'].values
